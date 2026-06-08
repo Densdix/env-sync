@@ -57,6 +57,16 @@
         "command": "envSync.refreshHistory",
         "title": "Refresh History",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "envSync.pullFile",
+        "title": "Pull from Database",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "envSync.pullAll",
+        "title": "Pull All from Database",
+        "icon": "$(cloud-download)"
       }
     ],
     "menus": {
@@ -64,7 +74,24 @@
         {
           "command": "envSync.refreshHistory",
           "when": "view == envSyncHistory",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "envSync.pullAll",
+          "when": "view == envSyncHistory",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "envSync.pullFile",
+          "when": "view == envSyncHistory && viewItem == fileItem",
+          "group": "inline"
+        },
+        {
+          "command": "envSync.pullFile",
+          "when": "view == envSyncHistory && viewItem == fileItem",
+          "group": "1_modification"
         }
       ]
     }

@@ -481,6 +481,88 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             })
         );
+
+        // 4. Register command for manual pullFile
+        context.subscriptions.push(
+            vscode.commands.registerCommand('envSync.pullFile', async (item: FileItem) => {
+                const dbUrl = vscode.workspace.getConfiguration('envSync').get<string>('databaseUrl', '') || '';
+                if (!dbUrl || !item) return;
+
+                const fileUrl = `${dbUrl.replace(/\/$/, '')}/env-sync/projects/${item.projectName}/files/${item.fileKey}.json`;
+                try {
+                    const fileInfo = await httpGetJson(fileUrl);
+                    if (fileInfo && fileInfo.content !== undefined) {
+                        const folder = vscode.workspace.workspaceFolders?.find(f => getProjectNamespace(f.uri.fsPath) === item.projectName);
+                        if (folder) {
+                            const absolutePath = path.join(folder.uri.fsPath, fileInfo.path);
+                            const dir = path.dirname(absolutePath);
+                            if (!fs.existsSync(dir)) {
+                                fs.mkdirSync(dir, { recursive: true });
+                            }
+                            lastReceivedContent.set(absolutePath, fileInfo.content);
+                            fs.writeFileSync(absolutePath, fileInfo.content, 'utf8');
+                            vscode.window.showInformationMessage(`[Env Sync] Successfully pulled ${fileInfo.path} from database.`);
+                            if (historyProvider) {
+                                historyProvider.refresh();
+                            }
+                        }
+                    }
+                } catch (err: any) {
+                    vscode.window.showErrorMessage(`[Env Sync] Failed to pull file: ${err.message}`);
+                }
+            })
+        );
+
+        // 5. Register command for manual pullAll
+        context.subscriptions.push(
+            vscode.commands.registerCommand('envSync.pullAll', async () => {
+                const dbUrl = vscode.workspace.getConfiguration('envSync').get<string>('databaseUrl', '') || '';
+                if (!dbUrl) {
+                    vscode.window.showWarningMessage('[Env Sync] Database URL is not configured.');
+                    return;
+                }
+
+                const folders = vscode.workspace.workspaceFolders;
+                if (!folders) return;
+
+                let pulledCount = 0;
+                for (const folder of folders) {
+                    const workspaceRoot = folder.uri.fsPath;
+                    const projectName = getProjectNamespace(workspaceRoot);
+                    const filesUrl = `${dbUrl.replace(/\/$/, '')}/env-sync/projects/${projectName}/files.json`;
+
+                    try {
+                        const filesData = await httpGetJson(filesUrl);
+                        if (filesData && typeof filesData === 'object') {
+                            for (const key in filesData) {
+                                const fileInfo = filesData[key];
+                                if (fileInfo && fileInfo.path && fileInfo.content !== undefined) {
+                                    const absolutePath = path.join(workspaceRoot, fileInfo.path);
+                                    const dir = path.dirname(absolutePath);
+                                    if (!fs.existsSync(dir)) {
+                                        fs.mkdirSync(dir, { recursive: true });
+                                    }
+                                    lastReceivedContent.set(absolutePath, fileInfo.content);
+                                    fs.writeFileSync(absolutePath, fileInfo.content, 'utf8');
+                                    pulledCount++;
+                                }
+                            }
+                        }
+                    } catch (err: any) {
+                        vscode.window.showErrorMessage(`[Env Sync] Failed to pull files for ${folder.name}: ${err.message}`);
+                    }
+                }
+
+                if (pulledCount > 0) {
+                    vscode.window.showInformationMessage(`[Env Sync] Successfully pulled ${pulledCount} .env file(s) from database.`);
+                    if (historyProvider) {
+                        historyProvider.refresh();
+                    }
+                } else {
+                    vscode.window.showInformationMessage(`[Env Sync] No files found in database to pull.`);
+                }
+            })
+        );
     }
 
     // Re-initialize if the user modifies our settings
