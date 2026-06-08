@@ -1,0 +1,85 @@
+{
+  "name": "vscode-env-sync",
+  "displayName": "Monorepo Env Sync",
+  "description": "Synchronize .env files across devices using Firebase Realtime Database with live visual highlights",
+  "version": "1.0.0",
+  "publisher": "densdix",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/densdix/vscode-env-sync"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Env Sync",
+      "properties": {
+        "envSync.databaseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Firebase Realtime Database URL (e.g. https://your-db-default-rtdb.firebaseio.com/)"
+        },
+        "envSync.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable automatic sync of .env files"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "envSync-explorer",
+          "title": "Env Sync",
+          "icon": "$(sync)"
+        }
+      ]
+    },
+    "views": {
+      "envSync-explorer": [
+        {
+          "id": "envSyncHistory",
+          "name": "History of Changes"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "envSync.refreshHistory",
+        "title": "Refresh History",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "envSync.refreshHistory",
+          "when": "view == envSyncHistory",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "echo 'No linting configured'",
+    "test": "echo 'No tests configured'"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "@types/node": "^18.11.18",
+    "typescript": "^5.0.2"
+  }
+}
