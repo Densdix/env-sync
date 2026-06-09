@@ -8,7 +8,7 @@ VS Code extension for automatic synchronization of `.env` files across developer
 ---
 
 ## Features
-`
+
 - 🔄 **Real-Time Sync:** When you save any `.env` file (e.g. `apps/api/.env`, `apps/web/.env`), it is pushed to the database. Other devices fetch the update instantly.
 - 🎨 **Visual Diff Highlights:** Changed or newly added lines are highlighted directly in the editor using theme-native colors, fading out after 10 seconds or when you start typing.
 - 📁 **History Sidebar Panel:** A dedicated view in the left explorer sidebar container listing all synced `.env` files and a chronological list of their modifications.
@@ -116,7 +116,7 @@ To package the extension into an installer you can share or install on another l
 
 ```bash
 # Compile and package into a .vsix archive
-npx @vscode/vsce package --no-git-tag-version
+npm run vsix
 ```
 
 This generates `env-sync-1.0.0.vsix` in the root folder.

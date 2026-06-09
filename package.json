@@ -110,11 +110,13 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "echo 'No linting configured'",
-    "test": "echo 'No tests configured'"
+    "test": "echo 'No tests configured'",
+    "vsix": "vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.75.0",
     "@types/node": "^18.11.18",
+    "@vscode/vsce": "^3.9.2",
     "typescript": "^5.0.2"
   }
 }
