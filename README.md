@@ -1,11 +1,14 @@
-# Monorepo Env Sync — VS Code Extension
+# Env Sync — VS Code Extension
 
-VS Code extension for automatic synchronization of `.env` files across developer devices in a monorepo. It uses **Firebase Realtime Database** as a lightweight, real-time backend.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![VS Code](https://img.shields.io/badge/VS%20Code-Extension-blue.svg)](https://marketplace.visualstudio.com/items?itemName=densdix.env-sync)
+
+VS Code extension for automatic synchronization of `.env` files across developer devices in a monorepo and usual projects. It uses **Firebase Realtime Database** as a lightweight, real-time backend.
 
 ---
 
 ## Features
-
+`
 - 🔄 **Real-Time Sync:** When you save any `.env` file (e.g. `apps/api/.env`, `apps/web/.env`), it is pushed to the database. Other devices fetch the update instantly.
 - 🎨 **Visual Diff Highlights:** Changed or newly added lines are highlighted directly in the editor using theme-native colors, fading out after 10 seconds or when you start typing.
 - 📁 **History Sidebar Panel:** A dedicated view in the left explorer sidebar container listing all synced `.env` files and a chronological list of their modifications.
@@ -99,7 +102,7 @@ npm run compile
 
 ## 5. Local Debugging & Testing
 
-1. Open this repository folder (`/vscode-env-sync`) in VS Code.
+1. Open this repository folder (`/env-sync`) in VS Code.
 2. Press `F5` (or go to **Run and Debug** -> click **Run Extension**).
 3. A new window named `[Extension Development Host]` will open.
 4. In this new window, open your monorepo workspace (e.g. `hpui`) and ensure the database URL setting is configured.
@@ -116,11 +119,17 @@ To package the extension into an installer you can share or install on another l
 npx @vscode/vsce package --no-git-tag-version
 ```
 
-This generates `vscode-env-sync-1.0.0.vsix` in the root folder.
+This generates `env-sync-1.0.0.vsix` in the root folder.
 
 ### To Install:
 * **Via command line:**
   ```bash
-  code --install-extension vscode-env-sync-1.0.0.vsix
+  code --install-extension env-sync-1.0.0.vsix
   ```
 * **Via VS Code UI:** Go to **Extensions** (`Cmd+Shift+X`), click the three dots (`...`) in the top right, select **Install from VSIX...**, and choose the `.vsix` file.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

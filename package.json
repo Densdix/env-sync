@@ -1,5 +1,5 @@
 {
-  "name": "vscode-env-sync",
+  "name": "env-sync",
   "displayName": "Monorepo Env Sync",
   "description": "Synchronize .env files across devices using Firebase Realtime Database with live visual highlights",
   "version": "1.0.0",
@@ -7,13 +7,21 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/densdix/vscode-env-sync"
+    "url": "https://github.com/Densdix/env-sync"
   },
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "env",
+    "dotenv",
+    "sync",
+    "firebase",
+    "monorepo",
+    "environment variables"
   ],
   "activationEvents": [
     "onStartupFinished"
