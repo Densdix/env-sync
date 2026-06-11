@@ -155,6 +155,7 @@ class WorkspaceSyncSession {
     private sseRequest: http.ClientRequest | null = null;
     private sseBuffer = '';
     private disposables: vscode.Disposable[] = [];
+    private stopped = false;
 
     constructor(
         private folder: vscode.WorkspaceFolder,
@@ -216,6 +217,7 @@ class WorkspaceSyncSession {
     }
 
     public stop() {
+        this.stopped = true;
         if (this.sseRequest) {
             this.sseRequest.destroy();
             this.sseRequest = null;
@@ -228,6 +230,15 @@ class WorkspaceSyncSession {
     }
 
     private connectSse(projectName: string, workspaceRoot: string, author: string) {
+        // Destroy any existing connection before opening a new one
+        if (this.sseRequest) {
+            this.sseRequest.destroy();
+            this.sseRequest = null;
+        }
+
+        // Don't reconnect if the session was stopped
+        if (this.stopped) return;
+
         const urlStr = `${this.dbUrl.replace(/\/$/, '')}/env-sync/projects/${projectName}/files.json`;
         const parsedUrl = new URL(urlStr);
 
@@ -240,7 +251,7 @@ class WorkspaceSyncSession {
             }
         };
 
-        this.sseRequest = https.request(options, (res) => {
+        const req = https.request(options, (res) => {
             this.sseBuffer = '';
             
             res.on('data', (chunk) => {
@@ -279,26 +290,27 @@ class WorkspaceSyncSession {
             });
 
             res.on('end', () => {
-                // Reconnect if the stream ends
-                setTimeout(() => {
-                    if (this.sseRequest) {
+                // Stream closed by server — reconnect after a short delay
+                if (!this.stopped) {
+                    setTimeout(() => {
                         this.connectSse(projectName, workspaceRoot, author);
-                    }
-                }, 3000);
+                    }, 3000);
+                }
             });
         });
 
-        this.sseRequest.on('error', (err: any) => {
+        req.on('error', (err: any) => {
             console.error(`[Env Sync] SSE connection error for ${projectName}:`, err);
-            // Reconnect after error
-            setTimeout(() => {
-                if (this.sseRequest) {
+            // Reconnect after error with longer delay
+            if (!this.stopped) {
+                setTimeout(() => {
                     this.connectSse(projectName, workspaceRoot, author);
-                }
-            }, 5000);
+                }, 5000);
+            }
         });
 
-        this.sseRequest.end();
+        this.sseRequest = req;
+        req.end();
     }
 
     private handleDbUpdate(event: string, payload: any, workspaceRoot: string, author: string) {
