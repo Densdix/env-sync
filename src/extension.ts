@@ -175,7 +175,9 @@ class WorkspaceSyncSession {
         // 2. Register save document listener
         const saveListener = vscode.workspace.onDidSaveTextDocument(async (document) => {
             if (!isEnvFile(document)) return;
-            if (!document.fileName.startsWith(workspaceRoot)) return;
+            
+            const docFolder = vscode.workspace.getWorkspaceFolder(document.uri);
+            if (!docFolder || docFolder.uri.fsPath !== workspaceRoot) return;
 
             const absolutePath = document.fileName;
             const relativePath = path.relative(workspaceRoot, absolutePath).replace(/\\/g, '/');

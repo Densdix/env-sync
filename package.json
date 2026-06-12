@@ -1,9 +1,10 @@
 {
   "name": "env-sync",
-  "displayName": "Monorepo Env Sync",
+  "displayName": "Env Sync",
   "description": "Synchronize .env files across devices using Firebase Realtime Database with live visual highlights",
   "version": "1.0.0",
-  "publisher": "densdix",
+  "publisher": "Densdix",
+  "icon": "resources/sync.png",
   "license": "MIT",
   "repository": {
     "type": "git",
