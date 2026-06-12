@@ -59,22 +59,22 @@ The extension automatically creates and reads the following JSON structure:
 {
   "env-sync": {
     "projects": {
-      "gitlab-main_cdp_cc_cdp_hpui_git": {
+      "github_com_username_my-project_git": {
         "files": {
-          "apps_homeplay-root_env": {
-            "path": "apps/homeplay-root/.env",
+          "apps_api_env": {
+            "path": "apps/api/.env",
             "content": "API_URL=https://api.example.com\nPORT=3000\n",
             "updatedAt": 1780956058136,
-            "updatedBy": "user@example.com (MacBook-Pro)"
+            "updatedBy": "developer@example.com (MacBook-Pro)"
           }
         },
         "history": {
-          "apps_homeplay-root_env": {
+          "apps_api_env": {
             "-Nxxxxxxxxxxxx": {
-              "path": "apps/homeplay-root/.env",
+              "path": "apps/api/.env",
               "content": "API_URL=https://api.example.com\nPORT=3000\n",
               "updatedAt": 1780956058136,
-              "updatedBy": "user@example.com (MacBook-Pro)"
+              "updatedBy": "developer@example.com (MacBook-Pro)"
             }
           }
         }
@@ -105,7 +105,7 @@ npm run compile
 1. Open this repository folder (`/env-sync`) in VS Code.
 2. Press `F5` (or go to **Run and Debug** -> click **Run Extension**).
 3. A new window named `[Extension Development Host]` will open.
-4. In this new window, open your monorepo workspace (e.g. `hpui`) and ensure the database URL setting is configured.
+4. In this new window, open your monorepo workspace (e.g. `my-project`) and ensure the database URL setting is configured.
 5. Save a `.env` file or modify the database value to test updates.
 
 ---
